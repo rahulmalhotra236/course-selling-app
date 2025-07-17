@@ -1,9 +1,12 @@
 const express = require("express")
+const { courseRouter } = require("./routes/course")
+const { userRouter } = require("./routes/user")
 
 const app = express()
 
-app.post("/user/sigup", (req, res) => {})
-app.post("/user/sigin", (req, res) => {})
-app.post("/course/purchase", (req, res) => {})
-app.get("/courses", (req, res) => {})
-app.get("/user/purchases", (req, res) => {})
+app.use("/api/v1/user", userRouter)
+app.use("/api/v1/course", courseRouter)
+
+app.listen(3000, () => {
+  console.log(`server is running`)
+})
