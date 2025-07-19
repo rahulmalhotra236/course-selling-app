@@ -50,12 +50,12 @@ adminRouter.post("/signin", async (req, res) => {
     })
   }
 })
-adminRouter.post("/", adminMiddleware, async (req, res) => {
+adminRouter.post("/course", adminMiddleware, async (req, res) => {
   const adminId = req.id
 
   const { title, description, imageUrl, price } = req.body
 
-  const course = courseModel.create({
+  const course = await courseModel.create({
     title,
     description,
     imageUrl,
@@ -68,7 +68,41 @@ adminRouter.post("/", adminMiddleware, async (req, res) => {
     courseId: course._id,
   })
 })
-adminRouter.put("/", (req, res) => {})
-adminRouter.get("/bulk", (req, res) => {})
+adminRouter.put("/", adminMiddleware, async (req, res) => {
+  const adminId = req.id
+
+  const { title, description, imageUrl, price, courseId } = req.body
+
+  const course = await courseModel.updateOne(
+    {
+      _id: courseId,
+      creatorId: adminId,
+    },
+    {
+      title,
+      description,
+      imageUrl,
+      price,
+      creatorId: adminId,
+    }
+  )
+
+  res.json({
+    message: "course updated",
+    courseId: course._id,
+  })
+})
+adminRouter.get("/bulk", adminMiddleware, async (req, res) => {
+  console.log(req.id)
+  const adminId = req.userId
+
+  const course = await courseModel.find({
+    creatorId: adminId,
+  })
+  res.json({
+    message: "here is the courses",
+    courses: course,
+  })
+})
 
 module.exports = { adminRouter: adminRouter }

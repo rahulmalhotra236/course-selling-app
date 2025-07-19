@@ -1,3 +1,5 @@
+require("dotenv").config()
+
 const express = require("express")
 const { adminRouter } = require("./routes/admin")
 const { courseRouter } = require("./routes/course")
@@ -13,9 +15,7 @@ app.use("/api/v1/admin", adminRouter)
 app.use("/api/v1/course", courseRouter)
 
 async function main() {
-  await mongoose.connect(
-    "mongodb+srv://rahulmalhotra236:Ck986y5LCQSGjTps@cluster0.jlt65zx.mongodb.net/coursera-app"
-  )
+  await mongoose.connect(process.env.MONGODB_URL)
   app.listen(3000, () => {
     console.log(`server is running`)
   })
